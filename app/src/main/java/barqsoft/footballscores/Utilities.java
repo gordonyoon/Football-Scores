@@ -38,9 +38,8 @@ public class Utilities {
                 return "Bundesliga";
             case BUNDESLIGA3:
                 return "Bundesliga";
-            default:
-                return "Not known League Please report";
         }
+        return null;
     }
 
     public static String getMatchDay(int match_day, int league_num) {
