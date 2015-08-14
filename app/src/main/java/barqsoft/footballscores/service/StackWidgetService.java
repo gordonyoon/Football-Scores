@@ -4,11 +4,12 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.Utilities;
 
 public class StackWidgetService extends RemoteViewsService {
 
@@ -17,13 +18,14 @@ public class StackWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return null;
+        return new StackRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 
 
     class StackRemoteViewsFactory implements RemoteViewsFactory {
         private Context mContext;
         private int mAppWidgetId;
+        private Cursor mCursor;
 
         public StackRemoteViewsFactory(Context context, Intent intent) {
             mContext = context;
@@ -33,8 +35,19 @@ public class StackWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
-//            Cursor c = mContext.getContentResolver().query(DatabaseContract.SCORES_CONTENT_URI, null, null, null, null);
-//            c.getPosition();
+            // get today's matches
+            String[] projection = {DatabaseContract.scores_table.HOME_COL,
+                    DatabaseContract.scores_table.AWAY_COL,
+                    DatabaseContract.scores_table.HOME_GOALS_COL,
+                    DatabaseContract.scores_table.AWAY_GOALS_COL,
+                    DatabaseContract.scores_table.TIME_COL};
+            String[] selectionArgs = {Utilities.getDate(0)};
+            mCursor = getApplicationContext().getContentResolver().query(
+                    DatabaseContract.scores_table.buildScoreWithDate(),
+                    projection,
+                    null,
+                    selectionArgs,
+                    null);
         }
 
         @Override
@@ -44,17 +57,25 @@ public class StackWidgetService extends RemoteViewsService {
 
         @Override
         public void onDestroy() {
-
+            mCursor.close();
         }
 
         @Override
         public int getCount() {
-            return 0;
+            return mCursor.getCount();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-            return null;
+            mCursor.moveToPosition(position);
+            RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item);
+            rv.setTextViewText(R.id.home_name, mCursor.getString(mCursor.getColumnIndex(DatabaseContract.scores_table.HOME_COL)));
+            rv.setTextViewText(R.id.away_name, mCursor.getString(mCursor.getColumnIndex(DatabaseContract.scores_table.AWAY_COL)));
+            rv.setTextViewText(R.id.date_textview, mCursor.getString(mCursor.getColumnIndex(DatabaseContract.scores_table.TIME_COL)));
+            rv.setTextViewText(R.id.score_textview, Utilities.getScores(
+                    mCursor.getInt(mCursor.getColumnIndex(DatabaseContract.scores_table.HOME_GOALS_COL)),
+                    mCursor.getInt(mCursor.getColumnIndex(DatabaseContract.scores_table.AWAY_GOALS_COL))));
+            return rv;
         }
 
         @Override
@@ -64,17 +85,17 @@ public class StackWidgetService extends RemoteViewsService {
 
         @Override
         public int getViewTypeCount() {
-            return 0;
+            return 1;
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public boolean hasStableIds() {
-            return false;
+            return true;
         }
     }
 }
