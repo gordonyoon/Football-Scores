@@ -13,7 +13,6 @@ public class DatabaseContract {
     public static final String CONTENT_AUTHORITY = "barqsoft.footballscores";
     public static final String PATH = "scores";
     public static Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-    public static Uri SCORES_CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH).build();
 
     public static final class scores_table implements BaseColumns {
         //Table data
@@ -26,8 +25,6 @@ public class DatabaseContract {
         public static final String AWAY_GOALS_COL = "away_goals";
         public static final String MATCH_ID = "match_id";
         public static final String MATCH_DAY = "match_day";
-
-
 
         //Types
         public static final String CONTENT_TYPE =
