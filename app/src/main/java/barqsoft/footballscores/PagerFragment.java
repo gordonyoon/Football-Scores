@@ -11,6 +11,7 @@ import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.StackView;
 
 import java.text.SimpleDateFormat;
 
@@ -23,14 +24,40 @@ public class PagerFragment extends Fragment {
     private myPageAdapter mPagerAdapter;
     private MainScreenFragment[] viewFragments = new MainScreenFragment[5];
 
+    private static final String ARG_POS = "positionArgument";
+    private int mWidgetPosition = StackView.INVALID_POSITION;
+
+    public static PagerFragment newInstance(int position) {
+
+        Bundle args = new Bundle();
+        args.putInt(ARG_POS, position);
+
+        PagerFragment fragment = new PagerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mWidgetPosition = getArguments().getInt(ARG_POS, StackView.INVALID_POSITION);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
         mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
         mPagerAdapter = new myPageAdapter(getChildFragmentManager());
         for (int i = 0; i < NUM_PAGES; i++) {
-            viewFragments[i] = new MainScreenFragment();
-            viewFragments[i].setFragmentDate(Utilities.getDate(i-2));
+            int offset = i - 2;
+            if (offset == 0) {
+                viewFragments[i] = MainScreenFragment.newInstance(mWidgetPosition);
+            } else {
+                viewFragments[i] = new MainScreenFragment();
+            }
+            viewFragments[i].setFragmentDate(Utilities.getDate(i - 2));
         }
         mPagerHandler.setAdapter(mPagerAdapter);
         mPagerHandler.setCurrentItem(MainActivity.current_fragment);

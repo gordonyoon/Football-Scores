@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.StackView;
 
 import barqsoft.footballscores.service.FetchService;
 
@@ -22,7 +23,20 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public static final int SCORES_LOADER = 0;
     public ScoresAdapter mAdapter;
     private String[] fragmentdate = new String[1];
-    private int last_selected_item = -1;
+
+    private static final String ARG_POS = "positionArgument";
+    private int mWidgetPosition = StackView.INVALID_POSITION;
+
+
+    public static MainScreenFragment newInstance(int position) {
+
+        Bundle args = new Bundle();
+        args.putInt(ARG_POS, position);
+
+        MainScreenFragment fragment = new MainScreenFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public MainScreenFragment() {
     }
@@ -34,6 +48,14 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 
     public void setFragmentDate(String date) {
         fragmentdate[0] = date;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mWidgetPosition = getArguments().getInt(ARG_POS, StackView.INVALID_POSITION);
+        }
     }
 
     @Override
@@ -66,25 +88,16 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        //Log.v(FetchScoreTask.LOG_TAG,"loader finished");
-        //cursor.moveToFirst();
-        /*
-        while (!cursor.isAfterLast())
-        {
-            Log.v(FetchScoreTask.LOG_TAG,cursor.getString(1));
-            cursor.moveToNext();
-        }
-        */
-
-        int i = 0;
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            i++;
-            cursor.moveToNext();
-        }
-        //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
         mAdapter.swapCursor(cursor);
-        //mAdapter.notifyDataSetChanged();
+
+        if (mWidgetPosition != StackView.INVALID_POSITION) {
+            cursor.moveToPosition(mWidgetPosition);
+            double matchId = cursor.getDouble(cursor.getColumnIndex(DatabaseContract.scores_table.MATCH_ID));
+            showDetails(matchId);
+
+            final ListView listView = (ListView) getView().findViewById(R.id.scores_list);
+            listView.setSelection(mWidgetPosition);
+        }
     }
 
     @Override
@@ -92,5 +105,9 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter.swapCursor(null);
     }
 
-
+    private void showDetails(double matchId) {
+        mAdapter.detail_match_id = matchId;
+        MainActivity.selected_match_id = (int) matchId;
+        mAdapter.notifyDataSetChanged();
+    }
 }

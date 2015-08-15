@@ -13,6 +13,9 @@ import barqsoft.footballscores.Utilities;
 
 public class StackWidgetService extends RemoteViewsService {
 
+    public static final String ACTION_SELECT_WIDGET_ITEM = "selectItem";
+    public static final String KEY_ITEM_POS = "itemPosition";
+
     public StackWidgetService() {
     }
 
@@ -75,6 +78,13 @@ public class StackWidgetService extends RemoteViewsService {
             rv.setTextViewText(R.id.score_textview, Utilities.getScores(
                     mCursor.getInt(mCursor.getColumnIndex(DatabaseContract.scores_table.HOME_GOALS_COL)),
                     mCursor.getInt(mCursor.getColumnIndex(DatabaseContract.scores_table.AWAY_GOALS_COL))));
+
+            // fillIntent for each item in the collection
+            Intent fillIntent = new Intent();
+            fillIntent.setAction(ACTION_SELECT_WIDGET_ITEM);
+            fillIntent.putExtra(KEY_ITEM_POS, position);
+            rv.setOnClickFillInIntent(R.id.widget_list_item, fillIntent);
+
             return rv;
         }
 

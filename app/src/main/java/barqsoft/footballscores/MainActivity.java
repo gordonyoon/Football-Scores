@@ -6,6 +6,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.StackView;
+
+import barqsoft.footballscores.service.StackWidgetService;
 
 public class MainActivity extends ActionBarActivity {
     public static int selected_match_id;
@@ -17,14 +20,14 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
+
+        if (!openFromWidget() && savedInstanceState == null) {
             my_main = new PagerFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, my_main)
                     .commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,5 +73,20 @@ public class MainActivity extends ActionBarActivity {
         selected_match_id = savedInstanceState.getInt("Selected_match");
         my_main = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState, "my_main");
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    private boolean openFromWidget() {
+        if (getIntent() != null) {
+            String action = getIntent().getAction();
+            if (action.equals(StackWidgetService.ACTION_SELECT_WIDGET_ITEM)) {
+                int position = getIntent().getIntExtra(StackWidgetService.KEY_ITEM_POS, StackView.INVALID_POSITION);
+                my_main = PagerFragment.newInstance(position);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container, my_main)
+                        .commit();
+                return true;
+            }
+        }
+        return false;
     }
 }

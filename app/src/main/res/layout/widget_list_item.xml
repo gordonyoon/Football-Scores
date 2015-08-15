@@ -3,6 +3,7 @@
     android:layout_width="250dp"
     android:layout_height="60dp"
     android:background="@drawable/appwidget_dark_bg"
+    android:id="@+id/widget_list_item"
     android:orientation="horizontal">
 
     <TextView
