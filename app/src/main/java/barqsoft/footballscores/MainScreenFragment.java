@@ -41,11 +41,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public MainScreenFragment() {
     }
 
-    private void update_scores() {
-        Intent service_start = new Intent(getActivity(), FetchService.class);
-        getActivity().startService(service_start);
-    }
-
     public void setFragmentDate(String date) {
         fragmentdate[0] = date;
     }
@@ -61,8 +56,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        update_scores();
-
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);

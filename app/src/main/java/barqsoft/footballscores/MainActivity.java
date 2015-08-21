@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.StackView;
 
+import barqsoft.footballscores.service.FetchService;
 import barqsoft.footballscores.service.StackWidgetService;
 
 public class MainActivity extends ActionBarActivity {
@@ -22,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         if (!openFromWidget() && savedInstanceState == null) {
+            update_scores();
             my_main = new PagerFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, my_main)
@@ -88,5 +90,10 @@ public class MainActivity extends ActionBarActivity {
             }
         }
         return false;
+    }
+
+    private void update_scores() {
+        Intent service_start = new Intent(this, FetchService.class);
+        startService(service_start);
     }
 }
