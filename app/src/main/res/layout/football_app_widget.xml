@@ -7,12 +7,12 @@
         android:id="@+id/stackView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        style="@style/widget_style"
         android:layout_margin="8dp"
-        android:contentDescription="@string/appwidget_text"/>
+        android:gravity="center"
+        android:text="@string/appwidget_text"/>
 </FrameLayout>

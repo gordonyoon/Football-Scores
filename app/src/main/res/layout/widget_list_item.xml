@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="250dp"
-    android:layout_height="60dp"
-    android:background="@drawable/appwidget_dark_bg"
+    style="@style/widget_style"
     android:id="@+id/widget_list_item"
     android:orientation="horizontal">
 
