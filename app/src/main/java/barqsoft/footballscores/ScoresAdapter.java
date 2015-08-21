@@ -46,9 +46,9 @@ public class ScoresAdapter extends CursorAdapter {
         mHolder.date.setText(cursor.getString(COL_MATCHTIME));
         mHolder.score.setText(Utilities.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
         mHolder.match_id = cursor.getDouble(COL_ID);
-        mHolder.home_crest.setImageResource(Utilities.getTeamCrestByTeamName(
+        mHolder.home_crest.setImageResource(Utilities.getTeamCrestByTeamName(context,
                 cursor.getString(COL_HOME)));
-        mHolder.away_crest.setImageResource(Utilities.getTeamCrestByTeamName(
+        mHolder.away_crest.setImageResource(Utilities.getTeamCrestByTeamName(context,
                 cursor.getString(COL_AWAY)));
 
         LayoutInflater vi = (LayoutInflater)context.getApplicationContext()
@@ -59,10 +59,10 @@ public class ScoresAdapter extends CursorAdapter {
             container.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
             TextView match_day = (TextView)v.findViewById(R.id.matchday_textview);
-            match_day.setText(Utilities.getMatchDay(cursor.getInt(COL_MATCHDAY),
-                    cursor.getInt(COL_LEAGUE)));
+            match_day.setText(Utilities.getMatchDay(context,
+                    cursor.getInt(COL_MATCHDAY), cursor.getInt(COL_LEAGUE)));
             TextView league = (TextView)v.findViewById(R.id.league_textview);
-            String leagueName = Utilities.getLeague(cursor.getInt(COL_LEAGUE));
+            String leagueName = Utilities.getLeague(context, cursor.getInt(COL_LEAGUE));
             if (leagueName != null) {
                 league.setText(leagueName);
             } else {
