@@ -62,9 +62,11 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         update_scores();
+
+        mAdapter = new ScoresAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
-        mAdapter = new ScoresAdapter(getActivity(), null, 0);
+        score_list.setItemsCanFocus(true);
         score_list.setAdapter(mAdapter);
         getLoaderManager().initLoader(SCORES_LOADER, null, this);
         mAdapter.detail_match_id = MainActivity.selected_match_id;

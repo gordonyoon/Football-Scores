@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_item"
+    android:id="@+id/scores_list_item"
     android:elevation="4dp"
     android:orientation="vertical">
 
@@ -87,7 +88,7 @@
     <FrameLayout
         android:id="@+id/details_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 </LinearLayout>
 
 

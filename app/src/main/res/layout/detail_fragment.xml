@@ -30,21 +30,17 @@
             android:textSize="@dimen/League" />
     </LinearLayout>
 
-    <FrameLayout
+    <Button
+        android:id="@+id/share_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <Button
-            android:id="@+id/share_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableLeft="@android:drawable/ic_menu_share"
-            android:gravity="center"
-            android:paddingLeft="120dp"
-            android:paddingRight="120dp"
-            android:text="@string/share_text" />
-    </FrameLayout>
+        android:layout_marginTop="20dp"
+        android:focusable="true"
+        android:layout_gravity="center"
+        android:drawableLeft="@android:drawable/ic_menu_share"
+        android:gravity="center"
+        android:paddingLeft="120dp"
+        android:paddingRight="120dp"
+        android:text="@string/share_text" />
 
 </LinearLayout>
