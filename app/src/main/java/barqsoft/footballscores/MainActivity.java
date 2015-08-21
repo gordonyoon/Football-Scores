@@ -31,6 +31,48 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    private boolean openFromWidget() {
+        if (getIntent() != null) {
+            String action = getIntent().getAction();
+            if (action.equals(StackWidgetService.ACTION_SELECT_WIDGET_ITEM)) {
+                int position = getIntent().getIntExtra(StackWidgetService.KEY_ITEM_POS, StackView.INVALID_POSITION);
+                my_main = PagerFragment.newInstance(position);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container, my_main)
+                        .commit();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void update_scores() {
+        Intent service_start = new Intent(this, FetchService.class);
+        startService(service_start);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.v(save_tag, "will save");
+        Log.v(save_tag, "fragment: " + String.valueOf(my_main.mPagerHandler.getCurrentItem()));
+        Log.v(save_tag, "selected id: " + selected_match_id);
+        outState.putInt("Pager_Current", my_main.mPagerHandler.getCurrentItem());
+        outState.putInt("Selected_match", selected_match_id);
+        getSupportFragmentManager().putFragment(outState, "my_main", my_main);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.v(save_tag, "will retrive");
+        Log.v(save_tag, "fragment: " + String.valueOf(savedInstanceState.getInt("Pager_Current")));
+        Log.v(save_tag, "selected id: " + savedInstanceState.getInt("Selected_match"));
+        current_fragment = savedInstanceState.getInt("Pager_Current");
+        selected_match_id = savedInstanceState.getInt("Selected_match");
+        my_main = (PagerFragment)getSupportFragmentManager().getFragment(savedInstanceState, "my_main");
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -53,47 +95,5 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        Log.v(save_tag, "will save");
-        Log.v(save_tag, "fragment: " + String.valueOf(my_main.mPagerHandler.getCurrentItem()));
-        Log.v(save_tag, "selected id: " + selected_match_id);
-        outState.putInt("Pager_Current", my_main.mPagerHandler.getCurrentItem());
-        outState.putInt("Selected_match", selected_match_id);
-        getSupportFragmentManager().putFragment(outState, "my_main", my_main);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.v(save_tag, "will retrive");
-        Log.v(save_tag, "fragment: " + String.valueOf(savedInstanceState.getInt("Pager_Current")));
-        Log.v(save_tag, "selected id: " + savedInstanceState.getInt("Selected_match"));
-        current_fragment = savedInstanceState.getInt("Pager_Current");
-        selected_match_id = savedInstanceState.getInt("Selected_match");
-        my_main = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState, "my_main");
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    private boolean openFromWidget() {
-        if (getIntent() != null) {
-            String action = getIntent().getAction();
-            if (action.equals(StackWidgetService.ACTION_SELECT_WIDGET_ITEM)) {
-                int position = getIntent().getIntExtra(StackWidgetService.KEY_ITEM_POS, StackView.INVALID_POSITION);
-                my_main = PagerFragment.newInstance(position);
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container, my_main)
-                        .commit();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void update_scores() {
-        Intent service_start = new Intent(this, FetchService.class);
-        startService(service_start);
     }
 }

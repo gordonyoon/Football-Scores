@@ -68,6 +68,54 @@ public class FetchService extends IntentService {
         }
     }
 
+    private String downloadData(String timeFrame) throws IOException {
+        final String BASE_URL = "http://api.football-data.org/alpha/fixtures";
+        final String QUERY_TIME_FRAME = "timeFrame";
+
+        Uri fetch_build = Uri.parse(BASE_URL).buildUpon().
+                appendQueryParameter(QUERY_TIME_FRAME, timeFrame).build();
+
+        HttpURLConnection m_connection = null;
+        BufferedReader reader = null;
+        String JSON_data = null;
+        try {
+            URL fetch = new URL(fetch_build.toString());
+            m_connection = (HttpURLConnection)fetch.openConnection();
+            m_connection.setRequestMethod("GET");
+            m_connection.addRequestProperty("X-Auth-Token", "e136b7858d424b9da07c88f28b61989a");
+            m_connection.connect();
+
+            // Read the input stream into a String
+            InputStream inputStream = m_connection.getInputStream();
+            if (inputStream != null) {
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                StringBuffer buffer = new StringBuffer();
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() > 0) {
+                    JSON_data = buffer.toString();
+                }
+            }
+        } catch (MalformedURLException | ProtocolException e) {
+            e.printStackTrace();
+        } finally {
+            if (m_connection != null) {
+                m_connection.disconnect();
+            }
+            if (reader != null) {
+                reader.close();
+            }
+        }
+        return JSON_data;
+    }
+
     private ArrayList processJSONdata(String JSONdata, boolean isReal) {
         //JSON data
         final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
@@ -160,54 +208,6 @@ public class FetchService extends IntentService {
             e.printStackTrace();
         }
         return values;
-    }
-
-    private String downloadData(String timeFrame) throws IOException {
-        final String BASE_URL = "http://api.football-data.org/alpha/fixtures";
-        final String QUERY_TIME_FRAME = "timeFrame";
-
-        Uri fetch_build = Uri.parse(BASE_URL).buildUpon().
-                appendQueryParameter(QUERY_TIME_FRAME, timeFrame).build();
-
-        HttpURLConnection m_connection = null;
-        BufferedReader reader = null;
-        String JSON_data = null;
-        try {
-            URL fetch = new URL(fetch_build.toString());
-            m_connection = (HttpURLConnection) fetch.openConnection();
-            m_connection.setRequestMethod("GET");
-            m_connection.addRequestProperty("X-Auth-Token", "e136b7858d424b9da07c88f28b61989a");
-            m_connection.connect();
-
-            // Read the input stream into a String
-            InputStream inputStream = m_connection.getInputStream();
-            if (inputStream != null) {
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                StringBuffer buffer = new StringBuffer();
-                while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
-                    buffer.append(line + "\n");
-                }
-
-                if (buffer.length() > 0) {
-                    JSON_data = buffer.toString();
-                }
-            }
-        } catch (MalformedURLException | ProtocolException e) {
-            e.printStackTrace();
-        } finally {
-            if (m_connection != null) {
-                m_connection.disconnect();
-            }
-            if (reader != null) {
-                reader.close();
-            }
-        }
-        return JSON_data;
     }
 }
 

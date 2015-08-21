@@ -36,48 +36,10 @@ public class ScoresProvider extends ContentProvider {
         return matcher;
     }
 
-    private int match_uri(Uri uri) {
-        String link = uri.toString();
-        {
-            if (link.contentEquals(DatabaseContract.BASE_CONTENT_URI.toString())) {
-                return MATCHES;
-            } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithDate().toString())) {
-                return MATCHES_WITH_DATE;
-            } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithId().toString())) {
-                return MATCHES_WITH_ID;
-            } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithLeague().toString())) {
-                return MATCHES_WITH_LEAGUE;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public boolean onCreate() {
         mOpenHelper = new ScoresDBHelper(getContext());
         return false;
-    }
-
-    @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
-    }
-
-    @Override
-    public String getType(Uri uri) {
-        final int match = muriMatcher.match(uri);
-        switch (match) {
-            case MATCHES:
-                return DatabaseContract.scores_table.CONTENT_TYPE;
-            case MATCHES_WITH_LEAGUE:
-                return DatabaseContract.scores_table.CONTENT_TYPE;
-            case MATCHES_WITH_ID:
-                return DatabaseContract.scores_table.CONTENT_ITEM_TYPE;
-            case MATCHES_WITH_DATE:
-                return DatabaseContract.scores_table.CONTENT_TYPE;
-            default:
-                throw new UnsupportedOperationException("Unknown uri :" + uri);
-        }
     }
 
     @Override
@@ -118,6 +80,39 @@ public class ScoresProvider extends ContentProvider {
         return retCursor;
     }
 
+    private int match_uri(Uri uri) {
+        String link = uri.toString();
+        {
+            if (link.contentEquals(DatabaseContract.BASE_CONTENT_URI.toString())) {
+                return MATCHES;
+            } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithDate().toString())) {
+                return MATCHES_WITH_DATE;
+            } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithId().toString())) {
+                return MATCHES_WITH_ID;
+            } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithLeague().toString())) {
+                return MATCHES_WITH_LEAGUE;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public String getType(Uri uri) {
+        final int match = muriMatcher.match(uri);
+        switch (match) {
+            case MATCHES:
+                return DatabaseContract.scores_table.CONTENT_TYPE;
+            case MATCHES_WITH_LEAGUE:
+                return DatabaseContract.scores_table.CONTENT_TYPE;
+            case MATCHES_WITH_ID:
+                return DatabaseContract.scores_table.CONTENT_ITEM_TYPE;
+            case MATCHES_WITH_DATE:
+                return DatabaseContract.scores_table.CONTENT_TYPE;
+            default:
+                throw new UnsupportedOperationException("Unknown uri :" + uri);
+        }
+    }
+
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
@@ -154,6 +149,11 @@ public class ScoresProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        return 0;
+    }
+
+    @Override
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
     }
 }

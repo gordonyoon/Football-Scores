@@ -17,20 +17,20 @@ import barqsoft.footballscores.service.StackWidgetService;
 public class FootballWidgetProvider extends AppWidgetProvider {
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
-        for (int i = 0; i < appWidgetIds.length; i++) {
-            updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
-        }
-    }
-
-    @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(StackWidgetService.ACTION_SELECT_WIDGET_ITEM)) {
             int position = intent.getIntExtra(StackWidgetService.KEY_ITEM_POS, StackView.INVALID_POSITION);
             openDetailedMatch(context, position);
         }
         super.onReceive(context, intent);
+    }
+
+    @Override
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        // There may be multiple widgets active, so update all of them
+        for (int i = 0; i < appWidgetIds.length; i++) {
+            updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
+        }
     }
 
     @Override

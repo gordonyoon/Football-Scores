@@ -20,11 +20,10 @@ import java.text.SimpleDateFormat;
  */
 public class PagerFragment extends Fragment {
     public static final int NUM_PAGES = 5;
+    private static final String ARG_POS = "positionArgument";
     public ViewPager mPagerHandler;
     private myPageAdapter mPagerAdapter;
     private MainScreenFragment[] viewFragments = new MainScreenFragment[5];
-
-    private static final String ARG_POS = "positionArgument";
     private int mWidgetPosition = StackView.INVALID_POSITION;
 
     public static PagerFragment newInstance(int position) {
@@ -48,7 +47,7 @@ public class PagerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
-        mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
+        mPagerHandler = (ViewPager)rootView.findViewById(R.id.pager);
         mPagerAdapter = new myPageAdapter(getChildFragmentManager());
         for (int i = 0; i < NUM_PAGES; i++) {
             int offset = i - 2;

@@ -40,7 +40,7 @@ public class ScoresAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
-        final ViewHolder mHolder = (ViewHolder) view.getTag();
+        final ViewHolder mHolder = (ViewHolder)view.getTag();
         mHolder.home_name.setText(cursor.getString(COL_HOME));
         mHolder.away_name.setText(cursor.getString(COL_AWAY));
         mHolder.date.setText(cursor.getString(COL_MATCHTIME));
@@ -51,24 +51,24 @@ public class ScoresAdapter extends CursorAdapter {
         mHolder.away_crest.setImageResource(Utilities.getTeamCrestByTeamName(
                 cursor.getString(COL_AWAY)));
 
-        LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
+        LayoutInflater vi = (LayoutInflater)context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = vi.inflate(R.layout.detail_fragment, null);
-        ViewGroup container = (ViewGroup) view.findViewById(R.id.details_fragment_container);
+        ViewGroup container = (ViewGroup)view.findViewById(R.id.details_fragment_container);
         if (mHolder.match_id == detail_match_id) {
-            container.addView(v, 0,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            container.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
-            TextView match_day = (TextView) v.findViewById(R.id.matchday_textview);
+            TextView match_day = (TextView)v.findViewById(R.id.matchday_textview);
             match_day.setText(Utilities.getMatchDay(cursor.getInt(COL_MATCHDAY),
                     cursor.getInt(COL_LEAGUE)));
-            TextView league = (TextView) v.findViewById(R.id.league_textview);
+            TextView league = (TextView)v.findViewById(R.id.league_textview);
             String leagueName = Utilities.getLeague(cursor.getInt(COL_LEAGUE));
             if (leagueName != null) {
                 league.setText(leagueName);
             } else {
                 league.setText(context.getString(R.string.unknown_league));
             }
-            Button share_button = (Button) v.findViewById(R.id.share_button);
+            Button share_button = (Button)v.findViewById(R.id.share_button);
             share_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
