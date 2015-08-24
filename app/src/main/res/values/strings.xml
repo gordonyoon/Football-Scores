@@ -80,4 +80,6 @@
     <string name="quarter_final">QuarterFinal</string>
     <string name="semi_final">SemiFinal</string>
     <string name="finals">Final</string>
+    <string name="description_share_button">share button</string>
+    <string name="description_scores_list">list of scores</string>
 </resources>
